@@ -104,7 +104,7 @@ class Telefonos {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function editarTelefonos() {
+   public static function editarTelefonos() {
         try {
             $conn = Connection::connect();
             $conn->beginTransaction();
@@ -117,10 +117,10 @@ class Telefonos {
             // Obtener datos del POST
             $PlacaTelefono = $_POST['PlacaTelefono'];
             $IdMarca = $_POST['IdMarca'];
-            $IdModelo = $_POST['IdModelo'];
-            $Serial = $_POST['Serial'];
+            $IdModelo = $_POST['IdModelo']; // Cambiado de idModelo a IdModelo
+            $Serial = $_POST['serial']; // Cambiado de serial a Serial
             $IdTipo = $_POST['IdTipo'];
-            $IpTelefono = $_POST['IpTelefono'];
+            $IpTelefono = $_POST['ipTelefono'];
             $Mac = $_POST['Mac'];
             $FechaCompra = $_POST['FechaCompra'];
             $IdEstado = $_POST['IdEstado'];
@@ -130,7 +130,7 @@ class Telefonos {
                 $conn->rollBack();
                 return "El precio debe ser un número válido y no puede ser negativo";
             }
-            $Notas = $_POST['Notas'];
+            $Notas = $_POST['Observaciones']; // Cambiado de Notas a Observaciones para coincidir con el formulario
             $IdUbicacion = $_POST['IdUbicacion'];
 
             // 2. Validar que el teléfono existe
@@ -141,8 +141,10 @@ class Telefonos {
                 return "El teléfono no existe en la base de datos";
             }
 
-            // 3. Validar que el modelo existe
-            $stmt = $conn->prepare("SELECT IdModelo FROM Modelos WHERE IdModelo = ? AND IdMarca = ?");
+            // 3. Validar que el modelo existe y pertenece a la marca seleccionada
+            $stmt = $conn->prepare("SELECT IdModelo 
+                                  FROM Modelos 
+                                  WHERE IdModelo = ? AND IdMarca = ?");
             $stmt->execute([$IdModelo, $IdMarca]);
             if (!$stmt->fetch()) {
                 $conn->rollBack();
@@ -155,9 +157,18 @@ class Telefonos {
                 return "El número de placa debe estar en el rango del (2001) al (2999)";
             }
 
+            // 5. Validar que el serial no esté duplicado (excluyendo el teléfono actual)
+            if (!empty($Serial)) {
+                $stmt = $conn->prepare("SELECT PlacaTelefono FROM Telefonos WHERE Serial = ? AND PlacaTelefono != ?");
+                $stmt->execute([$Serial, $PlacaTelefono]);
+                if ($stmt->fetch()) {
+                    $conn->rollBack();
+                    return "El número de serial ya está registrado en otro teléfono";
+                }
+            }
+
             // 7. Actualizar el teléfono
             $stmt = $conn->prepare("UPDATE Telefonos SET
-                IdMarca = ?, 
                 IdModelo = ?,
                 IdTipoTelefono = ?,
                 IpTelefono = ?,
@@ -171,7 +182,6 @@ class Telefonos {
                 WHERE PlacaTelefono = ?");
 
             $stmt->execute([
-                $IdMarca,
                 $IdModelo,
                 $IdTipo,
                 $IpTelefono,
