@@ -1,0 +1,287 @@
+/* 1. Variables CSS (Custom Properties) */
+:root {
+    --primary-color: #2c3e50; /* Azul oscuro/grisáceo */
+    --secondary-color: #34495e; /* Azul/gris un poco más claro */
+    --accent-color: #3498db; /* Azul brillante para acentos */
+    --light-accent-color: #5dade2;
+    --text-color: #333;
+    --text-color-light: #ecf0f1;
+    --bg-color: #f4f6f8; /* Fondo principal claro */
+    --bg-color-alt: #ffffff; /* Fondo alternativo (ej. para cards, tablas) */
+    --border-color: #dfe4ea;
+    --danger-color: #e74c3c;
+    --success-color: #2ecc71;
+
+    --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-size-base: 16px;
+    --line-height-base: 1.6;
+
+    --spacing-xs: 0.25rem; /* 4px */
+    --spacing-sm: 0.5rem;  /* 8px */
+    --spacing-md: 1rem;    /* 16px */
+    --spacing-lg: 1.5rem;  /* 24px */
+    --spacing-xl: 2rem;    /* 32px */
+
+    --header-height: 60px;
+    --footer-height: 50px;
+    --sidebar-width: 240px;
+
+    --border-radius: 4px;
+    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 2. Reset Básico y Normalize */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html{
+    font-size: var(--font-size-base);
+}
+
+body{
+    font-family: var(--font-family-base);
+    line-height: var(--line-height-base);/*que es line-height*/
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    -webkit-font-smoothing: antialiased;/*¿Que es?*/
+    -moz-osx-font-smoothing: grayscale;/*¿Que es?*/
+}
+
+/*Estas configuraciones son globales*/
+
+a{
+    text-decoration: none;
+    color: var(--accent-color);
+}
+
+a:hover{
+    color: var(--light-accent-color);
+}
+
+ul{
+    list-style: none;
+}
+/*Aqui terminan configuraciones globales*/
+
+/*Estructura Principal del layout*/
+.container-app{
+    display: flex;
+    flex-direction: column;
+    min-height: 10vh;
+}
+
+.container-header{
+    height: var(--header-height);
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    padding: 0 var(--spacing-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--box-shadow);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.container-header__logo{
+    display: flex;
+    align-items: center;
+}
+
+.container-header__logo img{
+    height: 80px;
+    margin-right: var(--spacing-sm);
+}
+
+.container-header__logo span{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/*Esta parte no aplica para el home pero si para las vistas de tablas*/
+.container-header__search{
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    position: absolute;
+    right: 2rem;
+}
+
+.container-header__search .form-input {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    min-width: 250px;
+}
+
+/*Aqui termina parte que no aplica para home*/
+
+.button__danger{
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 0.5rem var(--spacing-md);
+    border-radius: var(--border-radius);
+    font-weight: bold;
+}
+
+.container-body{
+    display: flex;
+    flex-grow: 1;/*Ocupa espacio restante*/
+    margin-top: var(--header-height);/*Para conpensar el header fijo*/
+    overflow: hidden;/*Prevenir scrillbars innecesarios*/
+}
+
+.container-aside{
+    width: var(--sidebar-width);
+    background-color: var(--secondary-color);
+    color: var(--text-color-light);
+    padding: var(--spacing-md);
+    height: calc(100vh - var(--header-height) - var(--footer-height)); /* Altura completa menos header y footer */;
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+.container-aside__nav ul {
+    margin-top: var(--spacing-lg);
+}
+
+.container-sidebar__link{
+    display: block;
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--text-color-light);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-sm);
+    transition: background-color 0.2s ease;
+}
+
+.container-sidebar__link:hover {
+    background-color: var(--primary-color); /* Un poco más oscuro que el fondo del aside */
+    color: var(--accent-color);
+}
+
+.container-main{
+    flex-grow: 1; /* Ocupa el ancho restante */
+    padding: var(--spacing-lg);
+    overflow-y: auto; /* Scroll si el contenido es largo */
+    height: calc(100vh - var(--header-height) - var(--footer-height)); /* Altura completa menos header y footer */
+    background-color: var(--bg-color);
+}
+
+.container-main__actions{
+    margin-bottom: 1.5rem; 
+    text-align: right; 
+    display: flex; 
+    gap: 1rem; 
+    justify-content: flex-end; 
+    align-items: center;
+}
+
+.button {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    text-align: center;
+}
+
+.button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.button--success{
+    padding:0.6rem 1.2rem; 
+    font-size:1rem;
+    background-color: #0a7c3a;
+    color: var(--text-color-light);
+    border-radius: var(--border-radius);
+}
+
+.button--success:hover {
+    background-color: var(--success-color); /* Un poco más oscuro */
+    color: var(--text-color-light);
+}
+
+.button--secondary {
+    background-color: var(--secondary-color);
+    color: var(--text-color-light);
+}
+.button--secondary:hover {
+    background-color: var(--primary-color);
+}
+
+.button--excel{
+    padding:0.5rem 1rem; 
+    font-size:1rem; 
+    background:#2980b9;
+    color:#fff;
+    border-radius:4px;
+}
+
+/*Funciona en la parte de ingresos*/
+.form-actions {
+    display: flex;
+    justify-content: flex-end; /* Alinea botones a la derecha */
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--border-color);
+}
+
+/*Tabla*/
+.table-container{
+    width: 100%;
+    height: 88vh;
+    padding: 0;
+}
+
+.main-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.main-table th,
+.main-table td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: var(--spacing-sm);
+    text-align: center;
+}
+
+.main-table th {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.main-table td {
+    border-bottom: 1px solid var(--border-color);
+}
+
+/*Fin Tabla*/
+
+.container-footer{
+    height: var(--footer-height);
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--spacing-md);
+    font-size: 0.9rem;
+    position: sticky; 
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; 
+}
