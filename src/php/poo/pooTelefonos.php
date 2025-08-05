@@ -103,4 +103,94 @@ class Telefonos {
         $stmt->execute([$placa]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public static function editarTelefonos() {
+        try {
+            $conn = Connection::connect();
+            $conn->beginTransaction();
+
+            // 1. Validar y obtener datos del POST
+            if (!isset($_POST['PlacaTelefono']) || empty($_POST['PlacaTelefono'])) {
+                return "Placa del teléfono no proporcionada";
+            }
+
+            // Obtener datos del POST
+            $PlacaTelefono = $_POST['PlacaTelefono'];
+            $IdMarca = $_POST['IdMarca'];
+            $IdModelo = $_POST['IdModelo'];
+            $Serial = $_POST['Serial'];
+            $IdTipo = $_POST['IdTipo'];
+            $IpTelefono = $_POST['IpTelefono'];
+            $Mac = $_POST['Mac'];
+            $FechaCompra = $_POST['FechaCompra'];
+            $IdEstado = $_POST['IdEstado'];
+            // Convertir y validar el precio
+            $Precio = !empty($_POST['Precio']) ? floatval(str_replace(',', '.', $_POST['Precio'])) : 0.00;
+            if (!is_numeric($Precio) || $Precio < 0) {
+                $conn->rollBack();
+                return "El precio debe ser un número válido y no puede ser negativo";
+            }
+            $Notas = $_POST['Notas'];
+            $IdUbicacion = $_POST['IdUbicacion'];
+
+            // 2. Validar que el teléfono existe
+            $stmt = $conn->prepare("SELECT PlacaTelefono FROM Telefonos WHERE PlacaTelefono = ?");
+            $stmt->execute([$PlacaTelefono]);
+            if (!$stmt->fetch()) {
+                $conn->rollBack();
+                return "El teléfono no existe en la base de datos";
+            }
+
+            // 3. Validar que el modelo existe
+            $stmt = $conn->prepare("SELECT IdModelo FROM Modelos WHERE IdModelo = ? AND IdMarca = ?");
+            $stmt->execute([$IdModelo, $IdMarca]);
+            if (!$stmt->fetch()) {
+                $conn->rollBack();
+                return "El modelo seleccionado no existe para esta marca";
+            }
+
+            // 4. Validar rango de placa (2001-2999)
+            if ($PlacaTelefono < 2001 || $PlacaTelefono >= 3000) {
+                $conn->rollBack();
+                return "El número de placa debe estar en el rango del (2001) al (2999)";
+            }
+
+            // 7. Actualizar el teléfono
+            $stmt = $conn->prepare("UPDATE Telefonos SET
+                IdMarca = ?, 
+                IdModelo = ?,
+                IdTipoTelefono = ?,
+                IpTelefono = ?,
+                Mac = ?,
+                FechaCompra = ?,
+                IdEstado = ?,
+                IdUbicacion = ?,
+                Precio = ?,
+                Notas = ?,
+                Serial = ?
+                WHERE PlacaTelefono = ?");
+
+            $stmt->execute([
+                $IdMarca,
+                $IdModelo,
+                $IdTipo,
+                $IpTelefono,
+                $Mac,
+                $FechaCompra,
+                $IdEstado,
+                $IdUbicacion,
+                $Precio,
+                $Notas,
+                $Serial,
+                $PlacaTelefono
+            ]);
+
+            $conn->commit();
+            return true;
+
+        } catch (Exception $e) {
+            if (isset($conn)) $conn->rollBack();
+            return 'Error al actualizar: ' . $e->getMessage();
+        }
+    }
 }

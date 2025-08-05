@@ -1,10 +1,9 @@
 <?php
-// pooComputadores.php
-include_once('../poo/pooComputadores.php');
+include_once('../poo/pooTelefonos.php');
 
-$resultado = Computadores::editarComputador();
+$resultado = Telefonos::editarTelefonos();
 if ($resultado === true) {
-    echo '<script>alert("Computador actualizado correctamente."); window.location.href = "vistaTablaComputadores.php";</script>';
+    echo '<script>alert("Teléfono actualizado correctamente."); window.location.href = "vistaTablaTelefonos.php";</script>';
     exit();
 } else {
     echo '<script>alert("' . addslashes($resultado) . '"); window.history.back();</script>';

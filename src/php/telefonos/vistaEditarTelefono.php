@@ -61,7 +61,7 @@ $bodegas = Bodegas::obtenerBodegas();
             <main class="container-main">
                 <h1 class="app-main__title">Editar Telefonos</h1>
                                 <section class="form-section" id="formNuevoComputador">
-                    <form class="data-form" id="formComputador" action="ingresarNuevoTelefono.php" method="POST">
+                    <form class="data-form" id="formComputador" action="editarTelefono.php" method="POST">
                         <div class="form-grid">
                             <!-- Fila 1 -->
                             <div class="form-group">
