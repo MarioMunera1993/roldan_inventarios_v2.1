@@ -80,7 +80,7 @@ include_once '../poo/pooTelefonos.php';
                                 <td><?php echo $telefono['Notas']; ?></td>
                                 <td><?php echo $telefono['Ubicacion']; ?></td>
                                 <td>
-                                    <a href="vistaEditarTelefonos.php?id=<?php echo $Telefono['PlacaTelefono']; ?>" class="button--edit">Editar</a>
+                                    <a href="vistaEditarTelefono.php?id=<?php echo $telefono['PlacaTelefono']; ?>" class="button--edit">Editar</a>
                                 </td>
                             </tr>
                             <?php endforeach; ?>

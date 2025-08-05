@@ -6,6 +6,7 @@ class Telefonos {
      //traera todos los Telefonos con sus caracteristicas
     public static function mostrarTotalTelefonos() {
         $consulta = Connection::connect()->prepare("SELECT
+                    t.IdTelefono,
                     t.PlacaTelefono,
                     m.Nombre AS MarcaTelefono,
                     md.NombreModelo AS ModeloTelefono,
@@ -23,7 +24,8 @@ class Telefonos {
                     JOIN Marcas AS m ON md.IdMarca = m.IdMarca
                     JOIN Tipos AS tp ON t.IdTipoTelefono = tp.IdTipo
                     JOIN Estados AS e ON t.IdEstado = e.IdEstado
-                    JOIN Ubicaciones AS u ON t.IdUbicacion = u.IdUbicacion ");
+                    JOIN Ubicaciones AS u ON t.IdUbicacion = u.IdUbicacion 
+                    ORDER BY t.PlacaTelefono ASC;");
         $consulta->execute();
         $datos = $consulta->fetchAll();
         return $datos;
@@ -73,5 +75,32 @@ class Telefonos {
             return 'Error al guardar: ' . $e->getMessage();
         }
 
+    }
+
+    // Devuelve los datos de un Telefono para edición
+    public static function obtenerDatosParaEditar($placa) {
+        $conn = Connection::connect();
+        $stmt = $conn->prepare("SELECT
+                    t.PlacaTelefono,
+                    m.IdMarca,
+                    md.IdModelo,
+                    t.Serial,
+                    tp.IdTipo,
+                    t.IpTelefono,
+                    t.Mac,
+                    t.FechaCompra,
+                    e.IdEstado,
+                    t.Precio,
+                    t.Notas,
+                    u.IdUbicacion
+                    FROM Telefonos AS t
+                    JOIN Modelos AS md ON md.IdModelo = t.IdModelo
+                    JOIN Marcas AS m ON md.IdMarca = m.IdMarca
+                    JOIN Tipos AS tp ON t.IdTipoTelefono = tp.IdTipo
+                    JOIN Estados AS e ON t.IdEstado = e.IdEstado
+                    JOIN Ubicaciones AS u ON t.IdUbicacion = u.IdUbicacion 
+                    WHERE t.PlacaTelefono = ?");
+        $stmt->execute([$placa]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

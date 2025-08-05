@@ -11,13 +11,13 @@ include_once('../poo/pooBodegas.php');
 include_once('../poo/pooComputadores.php');
 
 if (!isset($_GET['id'])) {
-    echo '<script>alert("No se especificó el computador a editar."); window.location.href = "tabla_computadores.php";</script>';
+    echo '<script>alert("No se especificó el computador a editar."); window.location.href = "vistaTablaComputadores.php";</script>';
     exit();
 }
 $placa = $_GET['id'];
 $datos = Computadores::obtenerDatosParaEditar($placa);
 if (!$datos) {
-    echo '<script>alert("Computador no encontrado."); window.location.href = "tabla_computadores.php";</script>';
+    echo '<script>alert("Computador no encontrado."); window.location.href = "vistaTablaComputadores.php";</script>';
     exit();
 }
 // Listas para selects
